@@ -3,6 +3,8 @@ database/todo.db
 # Byte-compiled / optimized / DLL files
 __pycache__/
 database/__pycache__/
+controller/__pycache__/
+model/__pycache__/
 *.py[cod]
 *$py.class
 

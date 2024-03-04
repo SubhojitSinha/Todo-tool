@@ -1,13 +1,23 @@
 # Todo-tool
 Local TODO tool with Python, Flask, SQLite, and Docker
 
+To use docker just run
+
+```
+docker-compose up -d
+```
+
 ## Stack
     1. Python
     2. SQLite
     3. Flusk
     4. Docker
 
-## Features    
+## Features
+
+<details>
+    <summary>... Details</summary>
+
     1. The user can add todos and those can be saved in a local SQLite database
     2. Add TODO
         1. Date
@@ -47,5 +57,6 @@ Local TODO tool with Python, Flask, SQLite, and Docker
         1. CSV
         2. Clipboard
     13. EOD Mail Feature
+</details>
 
-NB: We will add more points in future if needed.
+*NB: We will add more points in future if needed.*

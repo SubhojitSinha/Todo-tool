@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  web:
+    build:
+      context: ./
+      dockerfile: build/Dockerfile
+    ports:
+      - "5000:3000"
+    volumes:
+      - .:/app
+
+#   sqlite3:
+#     platform: linux/amd64
+#     image: nouchka/sqlite3:latest
+#     stdin_open: true
+#     tty: true
+#     volumes:
+#       - ./database/:/app/database/
+#   app:
+#     build:
+#       context: ./
+#       dockerfile: build/Dockerfile
+#     ports:
+#       - "5000:3000"
+#     volumes:
+#       - ../:/app
+#       - ./database/:/app/database # Here is the change
+#     # command: pipenv run gunicorn --bind=0.0.0.0:5000 --reload app:app
+# volumes:
+#   database:

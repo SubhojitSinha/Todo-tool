@@ -1,5 +1,8 @@
+.DS_Store
+database/todo.db
 # Byte-compiled / optimized / DLL files
 __pycache__/
+database/__pycache__/
 *.py[cod]
 *$py.class
 
@@ -8,7 +11,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
+# build/
 develop-eggs/
 dist/
 downloads/

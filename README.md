@@ -47,3 +47,5 @@ Local TODO tool with Python, Flask, SQLite, and Docker
         1. CSV
         2. Clipboard
     13. EOD Mail Feature
+
+NB: We will add more points in future if needed.

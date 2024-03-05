@@ -1,13 +1,17 @@
 import json
-from model.Todo import Todo
+from model.todo_model import Todo
 from flask import Flask,render_template
 from flask_migrate import Migrate
-from model.Todo import db
+from model.todo_model import db
 from routes import route_bp
 
+# Creating the Flask app
 app = Flask(__name__,template_folder='resources/templates')
+
+# Loading the config
 app.config.from_object('const')
 
+# register the blueprint routes
 app.register_blueprint(route_bp, url_prefix='/todo')
 
 db.init_app(app)

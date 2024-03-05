@@ -3,4 +3,5 @@ WORKDIR /app
 COPY . /app
 RUN pip install -r build/requirements.txt
 EXPOSE 3000
-CMD ["python", "main.py"]
+# CMD ["python", "main.py"]
+CMD ["python","-u","main.py"]

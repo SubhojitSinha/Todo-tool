@@ -9,3 +9,7 @@ DEBUG = True
 SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(dbdir , 'todo.db')
 # Turn off the Flask-SQLAlchemy event system and warning
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+
+STATIC_FOLDER='resources/static'
+TEMPLATE_FOLDER='resources/templates'

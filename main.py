@@ -1,12 +1,13 @@
-import json
-from model.todo_model import Todo
 from flask import Flask,render_template
 from flask_migrate import Migrate
 from model.todo_model import db
 from routes import route_bp
 
 # Creating the Flask app
-app = Flask(__name__,template_folder='resources/templates')
+app = Flask (__name__,
+    static_folder='resources/static',
+    template_folder='resources/templates')
+# app.config['STATIC_FOLDER'] = 'resources'
 
 # Loading the config
 app.config.from_object('const')

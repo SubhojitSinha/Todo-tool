@@ -48,4 +48,41 @@ Local TODO tool with Python, Flask, SQLite, and Docker
         2. Clipboard
     13. EOD Mail Feature
 
-NB: We will add more points in future if needed.
+## Identified API
+
+| Method | URL                  | Description                  |
+| ------ | -------------------- | ---------------------------- |
+| GET    | {base_url}/todo      | List all todo                |
+| POST   | {base_url}/todo      | Create new todo              |
+| GET    | {base_url}/todo/{id} | Get todo by ID               |
+| PUT    | {base_url}/todo/{id} | Update todo by ID            |
+| DELETE | {base_url}/todo/{id} | Delete todo by ID            |
+| PATCH  | {base_url}/todo/{id} | Update todo by ID            |
+| GET    | {base_url}/log       | Get all logs with total time |
+| POST   | {base_url}/log       | Add start/stop time          |
+| GET    | {base_url}/note/?    | Get notes by parametres      |
+| POST   | {base_url}/note      | Create new note entry        |
+
+
+## Identified database schema
+
+| Table Name | Columns      | Data Types   |
+| ---------- | ------------ | ------------ |
+| todo       | id           | INT, AI, PK  |
+|            | title        | VARCHAR(250) |
+|            | description  | TEXT         |
+|            | status       | INT          |
+|            | completed_at | DATETIME     |
+|            | created_at   | DATETIME     |
+|            |              |              |
+| logs       | id           | INT, AI, PK  |
+|            | todo_id      | INT          |
+|            | start_time   | DATETIME     |
+|            | end_time     | DATETIME     |
+|            |              |              |
+| notes      | id           | INT, AI, PK  |
+|            | todo_id      | INT          |
+|            | notes        | TEXT         |
+|            | created_at   | DATETIME     |
+
+## NB: We will add more points in future if needed.

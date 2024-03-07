@@ -32,7 +32,11 @@ class Todo(db.Model):
             })
 
         # Return the list of user data as JSON
-        return user_data
+        return {
+                'status': True,
+                'message': '',
+                'data': user_data
+            }
 
     @classmethod
     def add_row(self, request):
@@ -77,3 +81,23 @@ class Todo(db.Model):
             }
 
         return return_data
+
+    @classmethod
+    def get_row(self, id):
+        """
+        Fetches specific data and returns it as JSON.
+        """
+        data = self.query.get(id)
+        item = {
+                'id': data.id,
+                'title': data.title,
+                'desc': data.description
+            }
+        print(data.id)
+
+        # Return the list of user data as JSON
+        return {
+            'status': True,
+            'message': '',
+            'data': item
+        }

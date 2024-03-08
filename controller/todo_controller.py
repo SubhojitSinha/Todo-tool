@@ -6,7 +6,7 @@ def index():
     """
     A function that returns all Todo items.
     """
-    return Todo.fetch_all()
+    return Todo.fetch_all(request)
 
 def store():
     """
@@ -19,3 +19,9 @@ def show(id):
     This function return specific todo items.
     """
     return Todo.get_row(id)
+
+def delete():
+    """
+    This function delete the specific todo items.
+    """
+    return Todo.delete_row(request=request)

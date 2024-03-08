@@ -1,10 +1,12 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import or_
 db = SQLAlchemy()
 class Todo(db.Model):
     __tablename__ = 'todo'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String)
     description = db.Column(db.String(500))
+    status = db.Column(db.Integer)
 
     @property
     def serialize(self):
@@ -18,23 +20,37 @@ class Todo(db.Model):
         }
 
     @classmethod
-    def fetch_all(self):
+    def fetch_all(self, request):
         """
         Fetches all the user data and returns it as JSON.
         """
-        data = self.query.all()
+        message = ''
+        status = request.args.get('status')
+        id = request.args.get('id')
+        search = request.args.get('search')
+        qry = self.query
+        if(status):
+            qry = qry.filter(self.status.in_(status.split(',')))
+        if(id):
+            qry = qry.filter(self.id.in_(id.split(',')))
+        if(search):
+            qry = qry.filter(or_(self.title.like('%'+search+'%'), self.description.like('%'+search+'%')))
+
+        data = qry.all()
         user_data = []
         for user in data:
             user_data.append({
                 'id': user.id,
                 'title': user.title,
-                'desc': user.description
+                'desc': user.description,
+                'status': user.status
             })
-
+        if(not user_data):
+            message = "No data found!"
         # Return the list of user data as JSON
         return {
                 'status': True,
-                'message': '',
+                'message': message,
                 'data': user_data
             }
 
@@ -55,7 +71,8 @@ class Todo(db.Model):
             req_data = request.get_json()
             new_todo = Todo(
                 title=req_data['title'],
-                description=req_data['description']
+                description=req_data['description'],
+                status=req_data['status']
             )
             db.session.add(new_todo)
             db.session.commit()
@@ -91,13 +108,32 @@ class Todo(db.Model):
         item = {
                 'id': data.id,
                 'title': data.title,
-                'desc': data.description
+                'desc': data.description,
+                'status':data.status
             }
-        print(data.id)
 
         # Return the list of user data as JSON
         return {
             'status': True,
             'message': '',
             'data': item
+        }
+
+    @classmethod
+    def delete_row(self, request):
+        """
+        Delete specific data.
+        """
+        req_data = request.get_json()
+        data = self.query.filter(self.id.in_(req_data['id'])).delete()
+        print('pop')
+        if(data):
+            message = 'Item deleted sucessfully!'
+        else:
+            message = 'Item not found!'
+
+        return {
+            'status': True,
+            'message': message,
+            'data': []
         }

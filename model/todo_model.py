@@ -139,16 +139,31 @@ class Todo(db.Model):
         """
         Delete specific data.
         """
-        req_data = request.get_json()
-        data = self.query.filter(self.id.in_(req_data['id'])).delete()
-        print('pop')
-        if(data):
-            message = 'Item deleted sucessfully!'
-        else:
-            message = 'Item not found!'
+        try:
+            req_data = request.get_json()
+            todo_id  = req_data['id']
 
-        return {
-            'status': True,
-            'message': message,
-            'data': []
-        }
+            # Find the todo_row by ID
+            todo_row = self.query.get(todo_id)
+
+            if todo_row:
+                # Delete the user
+                db.session.delete(todo_row)
+                db.session.commit()
+                message = 'Item deleted sucessfully!'
+            else:
+                message = 'Item not found!'
+
+            return_data = {
+                'status': True,
+                'message': message,
+                'data': []
+            }
+        except Exception as e:
+            return_data = {
+                'status': False,
+                'message': str(e),
+                'data': []
+            }
+
+        return return_data

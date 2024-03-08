@@ -4,7 +4,7 @@ import datetime
 db = SQLAlchemy()
 class Todo(db.Model):
     __tablename__ = 'todo'
-    status_array = ["Ongoing", "Due", "Hold", "Ongoing"]
+    status_array = ["","Ongoing", "Due", "Hold", "Ongoing"]
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String)
@@ -116,23 +116,37 @@ class Todo(db.Model):
         """
         Fetches specific data and returns it as JSON.
         """
-        data = self.query.get(id)
-        item = {
-                'id': data.id,
-                'title': data.title,
-                'desc': data.description,
-                'status':data.status,
-                'status_text':self.status_array[data.status],
-                'created_at':data.created_at,
-                'completed_at': data.completed_at
+        try:
+            data = self.query.get(id)
+            item = []
+            if(data):
+                message = ''
+                item = {
+                    'id': data.id,
+                    'title': data.title,
+                    'desc': data.description,
+                    'status':data.status,
+                    'status_text':self.status_array[data.status],
+                    'created_at':data.created_at,
+                    'completed_at': data.completed_at
+                }
+            else:
+                message = "Item not found!"
+
+            return_data = {
+                'status': True,
+                'message': message,
+                'data': item
             }
 
-        # Return the list of user data as JSON
-        return {
-            'status': True,
-            'message': '',
-            'data': item
-        }
+        except Exception as e:
+            return_data = {
+                'status': False,
+                'message': str(e),
+                'data': []
+            }
+
+        return return_data
 
     @classmethod
     def delete_row(self, request):
@@ -153,6 +167,36 @@ class Todo(db.Model):
                 message = 'Item deleted sucessfully!'
             else:
                 message = 'Item not found!'
+
+            return_data = {
+                'status': True,
+                'message': message,
+                'data': []
+            }
+        except Exception as e:
+            return_data = {
+                'status': False,
+                'message': str(e),
+                'data': []
+            }
+
+        return return_data
+
+    @classmethod
+    def update_row(self, id, request):
+        """
+        Update specific data.
+        """
+        try:
+            req_data = request.get_json()
+            data = self.query.filter(self.id==id).first()
+            message = "Item not found!"
+            if(data):
+                data.title = req_data['title']
+                data.description = req_data['description']
+                data.status = req_data['status']
+                db.session.commit()
+                message = "Data updated successfully!"
 
             return_data = {
                 'status': True,

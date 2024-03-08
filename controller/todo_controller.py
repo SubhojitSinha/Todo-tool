@@ -25,3 +25,9 @@ def delete():
     This function delete the specific todo items.
     """
     return Todo.delete_row(request=request)
+
+def update(id):
+    """
+    This function delete the specific todo items.
+    """
+    return Todo.update_row(id, request=request)

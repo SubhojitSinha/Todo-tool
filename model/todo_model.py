@@ -1,12 +1,17 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
+import datetime
 db = SQLAlchemy()
 class Todo(db.Model):
     __tablename__ = 'todo'
+    status_array = ["Ongoing", "Due", "Hold", "Ongoing"]
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String)
     description = db.Column(db.String(500))
     status = db.Column(db.Integer)
+    created_at = db.Column(db.DateTime)
+    completed_at = db.Column(db.DateTime)
 
     @property
     def serialize(self):
@@ -16,7 +21,10 @@ class Todo(db.Model):
         return {
             'id': self.id,
             'title': self.title,
-            'description': self.description
+            'description': self.description,
+            'status': self.status,
+            'created_at': self.created_at,
+            'completed_at':self.completed_at
         }
 
     @classmethod
@@ -43,7 +51,10 @@ class Todo(db.Model):
                 'id': user.id,
                 'title': user.title,
                 'desc': user.description,
-                'status': user.status
+                'status': user.status,
+                'status_text':self.status_array[user.status],
+                'created_at':user.created_at,
+                'completed_at': user.completed_at
             })
         if(not user_data):
             message = "No data found!"
@@ -72,7 +83,8 @@ class Todo(db.Model):
             new_todo = Todo(
                 title=req_data['title'],
                 description=req_data['description'],
-                status=req_data['status']
+                status=req_data['status'],
+                created_at = datetime.datetime.now(),
             )
             db.session.add(new_todo)
             db.session.commit()
@@ -109,7 +121,10 @@ class Todo(db.Model):
                 'id': data.id,
                 'title': data.title,
                 'desc': data.description,
-                'status':data.status
+                'status':data.status,
+                'status_text':self.status_array[data.status],
+                'created_at':data.created_at,
+                'completed_at': data.completed_at
             }
 
         # Return the list of user data as JSON

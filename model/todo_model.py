@@ -1,3 +1,4 @@
+import traceback
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
 import datetime
@@ -105,7 +106,7 @@ class Todo(db.Model):
         except Exception as e:
             return_data = {
                 'status': False,
-                'message': str(e),
+                'message': f"Got Exception: {str(e)}",
                 'data': []
             }
 
@@ -153,32 +154,46 @@ class Todo(db.Model):
         """
         Delete specific data.
         """
+
+        req_data  = request.get_json()
+
         try:
-            req_data = request.get_json()
-            todo_id  = req_data['id']
+            if('id' in req_data):
+                todo_ids  = req_data['id']
 
-            # Find the todo_row by ID
-            todo_row = self.query.get(todo_id)
+                if(todo_ids):
+                    todo_ids  = str(todo_ids) if type(todo_ids) == int else todo_ids # Convert to string
+                    todo_ids = [int(id) for id in todo_ids.split(',')]    # Convert to list by splitting the string using comma
 
-            if todo_row:
-                # Delete the user
-                db.session.delete(todo_row)
-                db.session.commit()
-                message = 'Item deleted sucessfully!'
+                    # Delete users using a single query
+                    deleted_count = self.query.filter(self.id.in_(todo_ids)).delete(synchronize_session=False)
+
+                    if(deleted_count):
+                        # Commit the changes
+                        db.session.commit()
+                        message = f'{deleted_count} items deleted sucessfully!'
+                    else:
+                        message = 'Item not found in databse!'
+
+                    return_data = {
+                        'status': True,
+                        'message': message,
+                        'data': []
+                    }
+
+                else:
+                    raise ValueError('Please provide the todo ids!')
             else:
-                message = 'Item not found!'
+                raise ValueError("Bad request structure - `id` field missing!")
 
-            return_data = {
-                'status': True,
-                'message': message,
-                'data': []
-            }
         except Exception as e:
             return_data = {
                 'status': False,
                 'message': str(e),
                 'data': []
             }
+            if('traceback' in req_data):
+                return_data.update({'traceback': str(traceback.format_exc())})
 
         return return_data
 

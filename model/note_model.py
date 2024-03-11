@@ -5,7 +5,7 @@ db = SQLAlchemy()
 class Note(db.Model):
     __tablename__ = 'note'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    todo_id = db.Column(db.String)
+    todo_id = db.Column(db.Integer)
     note = db.Column(db.String(500))
     created_at = db.Column(db.DateTime)
 

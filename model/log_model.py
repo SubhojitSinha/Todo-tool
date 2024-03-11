@@ -5,7 +5,7 @@ db = SQLAlchemy()
 class Log(db.Model):
     __tablename__ = 'log'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    todo_id = db.Column(db.String)
+    todo_id = db.Column(db.Integer)
     start_time = db.Column(db.DateTime)
     end_time = db.Column(db.DateTime)
 
